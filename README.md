@@ -1,2 +1,2 @@
 # Cpp_Review 
-Solutions of HackerRank Problems
+Solutions of HackerRank Data Structures Problems
