@@ -1,47 +1,28 @@
-#include <cmath>
-#include <cstdio>
-#include <vector>
-#include <iostream>
-#include <algorithm>
+#include <bits/stdc++.h>
+
 using namespace std;
 
-
 int main() {
-    /* Enter your code here. Read input from STDIN. Print output to STDOUT */  
-    int n, q; 
-    cin >> n >> q;
-    int lastAns = 0;
-    vector< vector <int> > seqList (n);
-    for(int i = 0; i < n; i++)
-    {
-        vector<int> seq;
-        seqList[i] = seq;
+    int n;
+    int m;
+    cin >> n >> m;
+    vector<long long int> vec(n,0);
+    long long int max= 0, sum = 0;
+    for(int a0 = 0; a0 < m; a0++){
+        int a;
+        int b;
+        int k;
+        cin >> a >> b >> k;
+        vec[a-1] += k;
+        if(b <= n-1 )
+            vec[b] -= k;
     }
-    int mode, x, y;
-    vector<int> seq;
-    vector<int> res;
-    while(q)
-    {
-        cin >> mode >> x >> y;
-        switch(mode)
-        {
-            case(1):
-            	seq = seqList[(x ^ lastAns) % n];
-            	seq.push_back(y);
-            	seqList[(x ^ lastAns) % n] = seq;
-            	break;
-            case(2):
-            	seq = seqList[(x ^ lastAns) % n];
-            	lastAns = seq[y % seq.size()];
-            	res.push_back(lastAns);
-            	break;
-            default:
-            	cout << "notEx" << endl;
-            	break; 
-        }
-       	q--;
-    }
-    for(int i = 0; i < res.size(); i++)
-    	cout << res[i] << endl;
+   
+    for(int i = 0; i<vec.size();i++) {
+        sum += vec[i];
+        if(sum>max)
+            max = sum;
+    }       
+    cout << max << endl;
     return 0;
 }
