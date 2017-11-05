@@ -5,7 +5,8 @@ using namespace std;
 int main(){
     int g;
     cin >> g;
-    for(int a0 = 0; a0 < g; a0++){
+    pair<int, int> res;
+    for(int a0 = 0; a0 < g; a0++){ 
         int n;
         int m;
         int x;
@@ -19,74 +20,95 @@ int main(){
            cin >> b[b_i];
         }
         // your code goes here
-        int sum = 0;
-        int score = 0;
-        while(sum <= x)
-        {
-            if(a.empty() && b.empty()){ /// her iki vector boş ise
-                //cout << "stackler boş\n";
-                cout << score << endl;
-                break;
-            }
-            else if(a.empty()){        /// a boşsa b'den al
-                if(sum + b.back() > x){
-                    //cout << "a boş ve x sınırı aşılıyor\n";
-                    cout << score << endl;
-                    break;
-                    }
-                else{
-                    sum += b.back();
-                    b.pop_back();
-                    score++;
-                    //cout << "a boş ve b'den taş alındı\n";
-                    continue;
-                }
-            }
-            else if(b.empty()){       /// b boşsa a'dan al
-                if(sum + a.back() > x){
-                    //cout << "b boş ve x sınırı aşılıyor\n";
-                    cout << score << endl;
-                    break;
-                    }
-                else{
-                    sum += a.back();
-                    score++;
-                    a.pop_back();
-                    //cout << "b boş ve a'dan taş alındı\n";
-                    continue;
-                }
-            }
-            else{                    /// her ikisi de doluysa minimum olanı al 
-                if(a.back() > b.back()){
-                    if(sum + b.back() > x){
-                        //cout <<"b'den alınan taşla x aşılıyor\n";
-                        cout << score << endl;
-                        break;
-                    }
-                    else{
-                        sum += b.back();
-                        score++;
-                        b.pop_back();
-                        //cout << "stackler dolu fakat b'den taş alındı\n";
-                        continue;
-                    }
-                }
-                else{
-                    if(sum + a.back() > x){
-                        //cout <<"a'dan alınan taşla x aşılıyor\n";
-                        cout << score << endl;
-                        break;
-                    }
-                    else{
-                        sum += a.back();
-                        score++;
-                        a.pop_back();
-                        //cout << "stackler dolu fakat b'den taş alındı\n";
-                        continue;
-                    }
-                }
-            }
-        }
+	    int sum = 0;
+	    vector<int> sumA;
+	    vector<int> sumB;
+	    while(sum <= x && !(a.empty())){
+	        if(sum + a.back() > x)
+	            break;
+	        else{
+	            sum += a.back();
+	            sumA.push_back(sum);
+	            a.pop_back();
+	        }
+	    }
+	    sum = 0;
+	    while(sum <= x && !(b.empty())){
+	        if(sum + b.back() > x)
+	            break;
+	        else{
+	            sum += b.back();
+	            sumB.push_back(sum);
+	            b.pop_back();
+	        }
+	    }
+	    if(sumA.empty() && sumB.empty()){
+	        cout << 0 << endl;
+	        continue;
+	    }
+	    
+	    if(sumA.size() > sumB.size()){
+	        //cout <<"res initialized with A" << endl;
+	        res.first = sumA.back();
+	        res.second = sumA.size();
+	    }
+	    else{
+	        //cout <<"res initialized with B" << endl;
+	        res.first = sumB.back();
+	        res.second = sumB.size();
+	    }
+	    vector<int> tempSumA = sumA;
+	    vector<int> tempSumB = sumB;
+	    
+	    if(res.second == tempSumA.size()){
+	        for(int i = sumA.size()-1; i>=0; i--){
+	            for(int j = sumA.size()-i-1; j<sumB.size(); j++){
+	                if(sumA[i]+sumB[j] > x){
+	                    //cout << "i:" << i <<"\tj:" << j << "\tsumA[i]" << sumA[i] << "\tsumB[j]" << sumB[j] << "\tlimit exceeded" << endl;
+	                    break;
+	                }
+	                else{
+	                    if(sumA[i] + sumB[j] <= x && i+j+2>=res.second){
+	                        res.first = sumA[i] + sumB[j];
+	                        res.second = i+j+2;
+	                        //cout << "i:" << i <<"\tj:" << j << endl;
+	                    }
+	                    else
+	                        continue;
+	                }
+	            }
+	        }
+	    }
+	    else{
+	        for(int i = sumB.size()-1; i>=0; i--){
+	            for(int j = sumB.size()-i-1; j<sumA.size(); j++){
+	                if(sumB[i]+sumA[j] > x){
+	                    //cout << "i:" << i <<"\tj:" << j << "\tlimit exceededB" << endl;
+	                    break;
+	                }
+	                else{
+	                    if(sumB[i] + sumA[j] <= x && i+j+2>=res.second){
+	                        res.first = sumB[i] + sumA[j];
+	                        res.second = i+j+2;
+	                        //cout << "i:" << i <<"\tj:" << j << endl;
+	                    }
+	                    else
+	                        continue;
+	                }
+	            }
+	        }
+	    }
+	    cout << res.second << endl; //"--" << res.second << endl;
+	    
+	    /*
+	    for(int i = 0; i<sumA.size();i++)
+	        cout << sumA[i] << endl;
+	    cout << endl;
+	    for(int i = 0; i<sumB.size();i++)
+	        cout << sumB[i] << endl;
+	    cout << endl;
+	   */
     }
+    //cout << res.first << "--" << res.second << endl;
     return 0;
 }
